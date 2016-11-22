@@ -1,0 +1,57 @@
+#include <iostream>
+#include <conio.h>
+
+using namespace std; 
+
+int main()
+{
+	//Zadanie 1
+		int v,z=0;
+	cout << "Wprowadz wielkosc tablicy\n";
+	cin >> v;
+
+	int * x = new int[v];
+	int * y = new int[v];
+	for (int i = 0; i < v; i++)
+	{
+		x[i] = 1;
+		y[i] = 2;
+
+	}
+
+	for (int i = 0; i < v; i++)
+	{
+		z = z + (x[i] * y[i]);
+	}
+	cout << "Iloczyn skalarny wynosi : " << z << endl;
+
+	//Zadanie 2
+	int n;
+	cout << "Wprowadz wielkosc tablicy\n";
+	cin >> n;
+	int * tab3 = new int [n];
+	cout << "\nWprowadz dane do tablicy\n";
+	for (int i = 0; i < n; i++)
+		cin >> tab3[i];
+	//sortowanie
+	int temp, j;
+
+	for (int i = 1; i < n; i++)
+	{
+		temp = tab3[i];
+
+		for (j = i - 1; j >= 0; j--)
+		{
+			if (tab3[j] > temp)
+			{
+				tab3[j + 1] = tab3[j];
+				tab3[j + 1] = temp;
+			}
+		}
+	}
+	//koniec sortowania
+		
+	for (int i = 0; i < n; i++)
+		cout << "Indeks " << i << " : " << tab3[i] << endl;
+	system("pause");
+}
