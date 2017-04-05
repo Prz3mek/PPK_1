@@ -1,0 +1,273 @@
+#include <iostream>
+#include <algorithm>
+#include <ctime>
+#include <math.h>
+#include <cstdlib>
+#include <cstdio>
+
+using namespace std;
+
+bool weryfikacja(int* tab, int a)
+{
+	for (int i = 0; i < a - 1; i++)
+	{
+		if (tab[i] > tab[i + 1])
+			return false;
+	}
+	return true;
+}
+
+void babelkowe(int* tab, int a)
+{
+	int z = 0;
+	for (int i = 0; i < a; i++)
+		for (int j = 1; j < a; j++)
+			if (tab[j - 1]>tab[j])
+			{
+				z = tab[j - 1];
+				tab[j - 1] = tab[j];
+				tab[j] = z;
+			}
+
+}
+void wybieranie(int *tab, int a)
+{
+	int k, x;
+	for (int i = 0; i < a; i++)
+	{
+		k = i;
+		x = tab[i];
+
+		for (int j = i + 1; j <= a; j++)
+		{
+			if (tab[j] < x)
+			{
+				j = j;
+				x = tab[j];
+			}
+		}
+		tab[k] = tab[i];
+		tab[i] = x;
+	}
+}
+void wstawianie(int *tab, int a)
+{
+	int pom, j;
+	for (int i = 1; i<a; i++)
+	{
+		pom = tab[i];
+		j = i - 1;
+		while ((j >= 0) && (tab[j]>pom))
+		{
+			tab[j + 1] = tab[j];
+			--j;
+		}
+		tab[j + 1] = pom;
+	}
+}
+
+void shell(int *tab, int a)
+{
+	int h = 1;
+	int x, j;
+	while (h < a / 9)
+	{
+		h = 3 * h + 1;
+	}
+	while (h > 0)
+	{
+		for (int i = h; i < a; i++)
+		{
+			x = tab[i];
+			j = i;
+			while (j >= h  && x< tab[j - h])
+			{
+				tab[j] = tab[j - h];
+				j = j - h;
+			}
+			tab[j] = x;
+		}
+		h = h / 3;
+	}
+}
+void szybkie(int* tab, int d,int g)
+{
+	int s,zam,t = 0;
+	if (d < g)
+	{
+		t = tab[d];
+		s = d;
+		for (int i = d + 1; i < g; i++)
+		{
+			if (tab[i] < t)
+			{
+				s = s + 1;
+				zam = tab[s];
+				tab[s] = tab[i];
+				tab[i] = zam;
+
+			}
+		}
+		zam = tab[d];
+		tab[d] = tab[s];
+		tab[s] = zam;
+
+		szybkie(tab, d, s);
+		szybkie(tab, s + 1, g);
+	}
+}
+void szybkie_wstawianie(int* tab, int d, int g)
+{
+	if (d < g)
+	{
+		if ((g - d) < 40)
+		{
+			int pom, j;
+			for (int i = d; i<g; i++)
+			{
+				pom = tab[i];
+				j = i - 1;
+				while ((j >= 0) && (tab[j]>pom))
+				{
+					tab[j + 1] = tab[j];
+					--j;
+				}
+				tab[j + 1] = pom;
+			}
+			return;
+		}
+		int s, zam, t = 0;
+		if (d < g)
+		{
+			t = tab[d];
+			s = d;
+			for (int i = d + 1; i < g; i++)
+			{
+				if (tab[i] < t)
+				{
+					s = s + 1;
+					zam = tab[s];
+					tab[s] = tab[i];
+					tab[i] = zam;
+
+				}
+			}
+			zam = tab[d];
+			tab[d] = tab[s];
+			tab[s] = zam;
+
+			szybkie_wstawianie(tab, d, s);
+			szybkie_wstawianie(tab, s + 1, g);
+		}
+	}
+}
+void szybkie_mediana(int* tab, int d, int g)
+{
+	int t, s, zam=0;
+
+
+	if (d<g)
+	{
+		if (tab[(d + g) / 2]>tab[d] && tab[(d + g) / 2] < tab[g])
+		{
+			zam = tab[(g + d) / 2];
+			tab[(g + d) / 2] = tab[d];
+			tab[d] = zam;
+		}
+		else if (tab[(d + g) / 2]<tab[d] && tab[(d + g) / 2] > tab[g])
+		{
+			zam = tab[(g + d) / 2];
+			tab[(g + d) / 2] = tab[d];
+			tab[d] = zam;
+		}
+		else if (tab[(d + g) / 2] > tab[g] && tab[g] > tab[d])
+		{
+			zam = tab[d];
+			tab[d] = tab[g];
+			tab[g] = zam;
+		}
+		else if (tab[(d + g) / 2] < tab[g] && tab[g] < tab[d])
+		{
+			zam = tab[d];
+			tab[d] = tab[g];
+			tab[g] = zam;
+		}
+		t = tab[d];
+		s = d;
+		for (int i = d + 1; i < g; i++)
+		{
+			if (tab[i] < t)
+			{
+				s = s + 1;
+				zam = tab[s];
+				tab[s] = tab[i];
+				tab[i] = zam;
+
+			}
+		}
+		zam = tab[d];
+		tab[d] = tab[s];
+		tab[s] = zam;
+
+		szybkie_mediana(tab, d, s);
+		szybkie_mediana(tab, s + 1, g);
+	}
+}
+
+void tworzenie(int* tab, int a)
+{
+	for (int i = 0; i < a; i++)
+	{
+		tab[i] = i;
+	}
+}
+void zmiana(int*& tab, int &a)
+{
+	delete[] tab;
+	a = a * 2;
+	tab = new int[a];
+	tworzenie(tab, a);
+}
+int main()
+{
+	int a = 500;
+	int* tab = new int[a];
+	float srednia = 0.0;
+	bool spr;
+	int licznik = 1;
+	clock_t czas;
+	zmiana(tab, a);
+
+	while (srednia < 30)
+	{
+		srednia = 0.0;
+		for (int i = 0; i < 5; i++)
+		{
+			random_shuffle(tab, tab + a);
+			czas = clock();
+			//babelkowe(tab, a);
+			//wstawianie(tab, a);
+			//wybieranie(tab, a);
+			//shell(tab,a);
+			//szybkie(tab, 0, a);
+			//szybkie_wstawianie(tab, 0, a);
+			szybkie_mediana(tab, 0, a);
+			czas = clock() - czas;
+			spr = weryfikacja(tab, a);
+			if (spr == false)
+			{
+				cout << " Weryfikacja niepoprawna " << endl;
+			}
+			else
+				cout << " Weryfikacja poprawna " << endl;
+			srednia = srednia + czas / (float)CLOCKS_PER_SEC;
+		}
+		srednia = srednia / 5;
+		cout << "Sredni czas wynosi " << srednia<<" Dane testowe 1000*2^"<<licznik << endl;
+		zmiana(tab, a);
+		licznik++;
+	}
+	delete[] tab;
+	getchar();
+	return 0;
+}
